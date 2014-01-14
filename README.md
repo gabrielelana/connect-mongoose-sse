@@ -1,4 +1,2 @@
-connect-mongoose-sse
-====================
-
+# What
 Connect middleware to expose changes to a Mongoose model via SSE (Server Sent Events)
