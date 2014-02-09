@@ -1,0 +1,38 @@
+{
+  "name": "connect-mongoose-sse",
+  "version": "0.0.1",
+  "description": "Connect middleware to expose changes to a Mongoose model via SSE (Server Sent Events)",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --recursive --reporter=spec --colors spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gabrielelana/connect-mongoose-sse"
+  },
+  "keywords": [
+    "mongoose",
+    "connect",
+    "express",
+    "middleware",
+    "sse",
+    "server",
+    "sent",
+    "events"
+  ],
+  "author": "gabriele.lana@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gabrielelana/connect-mongoose-sse/issues"
+  },
+  "homepage": "https://github.com/gabrielelana/connect-mongoose-sse",
+  "devDependencies": {
+    "sinon-chai": "~2.5.0",
+    "chai": "~1.9.0",
+    "sinon": "~1.8.1",
+    "mocha": "~1.17.1"
+  },
+  "dependencies": {
+    "lodash": "~2.4.1"
+  }
+}
