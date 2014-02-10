@@ -3,6 +3,12 @@ var util = require('util'),
 
 module.exports = function(model, options) {
   options = _({query: 'updatedBetween'}).merge(options || {}).valueOf()
+  if (model && _.isUndefined(model[options.query])) {
+    throw new Error(util.format(
+      'Seems like "%s" doesn\'t implement the query method "%s"',
+      model.modelName, options.query
+    ))
+  }
 
   return function(req, res, next) {
     if ((req.headers['accept'] || '').indexOf('text/event-stream') < 0) {

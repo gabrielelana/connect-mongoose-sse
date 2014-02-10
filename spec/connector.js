@@ -129,5 +129,18 @@ describe('connect-mongoose-sse', function() {
         expect(this.next).to.not.have.been.called
       })
     })
+
+    context('when the Model doesn\'t implement the query method', function() {
+      beforeEach(function() {
+        this.model.updatedBetween = undefined
+        this.model.modelName = 'Test'
+      })
+
+      it('will throw an error', function() {
+        expect(function() {sse(this.model)}.bind(this)).to.throw(
+          Error, /.*Test.*doesn't implement.*method.*updatedBetween/
+        )
+      })
+    })
   })
 })
