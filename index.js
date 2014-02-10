@@ -1,6 +1,9 @@
-var util = require('util')
+var util = require('util'),
+    _ = require('lodash')
 
-module.exports = function(model) {
+module.exports = function(model, options) {
+  options = _({query: 'updatedBetween'}).merge(options || {}).valueOf()
+
   return function(req, res, next) {
     if ((req.headers['accept'] || '').indexOf('text/event-stream') < 0) {
       return next()
@@ -9,7 +12,7 @@ module.exports = function(model) {
     var startAt = parseInt(req.headers['last-event-id'] || '0', 10),
         endAt = (new Date()).getTime()
 
-    model.createdBetween(startAt, endAt, function(err, docs) {
+    model[options.query](startAt, endAt, function(err, docs) {
       if (err) {
         res.writeHead(500)
         res.end()

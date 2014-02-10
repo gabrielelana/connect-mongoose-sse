@@ -41,16 +41,16 @@ describe('connect-mongoose-sse', function() {
       this.next = sinon.spy()
       this.model = {
         collection: {name: 'model-collection-name'},
-        createdBetween: sinon.spy(function(from, to, callback) {
+        updatedBetween: sinon.spy(function(from, to, callback) {
           callback(null, [])
         })
       }
     })
 
-    it('will call createdBetween on Model', function() {
+    it('will call updatedBetween on Model', function() {
       sse(this.model)(this.req, this.res, this.next)
 
-      expect(this.model.createdBetween).to.have.been.calledOnce
+      expect(this.model.updatedBetween).to.have.been.calledOnce
       expect(this.next).to.not.have.been.called
     })
 
@@ -65,16 +65,16 @@ describe('connect-mongoose-sse', function() {
     })
 
     context('and have Last-Event-ID header', function() {
-      it('will call createdBetween on Model with Last-Event-ID value', function() {
+      it('will call updatedBetween on Model with Last-Event-ID value', function() {
         this.req.headers['last-event-id'] = '1'
 
         sse(this.model)(this.req, this.res, this.next)
 
-        expect(this.model.createdBetween).to.have.been.calledWith(1)
+        expect(this.model.updatedBetween).to.have.been.calledWith(1)
       })
     })
 
-    context('when Model.createdBetween returns nothing', function() {
+    context('when Model.updatedBetween returns nothing', function() {
       it('will write nothing', function() {
         sse(this.model)(this.req, this.res, this.next)
 
@@ -82,11 +82,11 @@ describe('connect-mongoose-sse', function() {
       })
     })
 
-    context('when Model.createdBetween returns some documents', function() {
+    context('when Model.updatedBetween returns some documents', function() {
       it('will write the event', function() {
         var documents = [{id: 1}, {id: 2}, {id: 3}]
 
-        this.model.createdBetween = sinon.spy(function(from, to, callback) {
+        this.model.updatedBetween = sinon.spy(function(from, to, callback) {
           callback(null, documents)
         })
 
@@ -105,15 +105,28 @@ describe('connect-mongoose-sse', function() {
       })
     })
 
-    context('when Model.createdBetween returns an error', function() {
+    context('when Model.updatedBetween returns an error', function() {
       it('will reply with 500', function() {
-        this.model.createdBetween = sinon.spy(function(from, to, callback) {
+        this.model.updatedBetween = sinon.spy(function(from, to, callback) {
           callback('unknown-error')
         })
 
         sse(this.model)(this.req, this.res, this.next)
 
         expect(this.res.writeHead).to.have.been.calledWith(500)
+      })
+    })
+
+    context('when query option is createdBetween', function() {
+      beforeEach(function() {
+        this.model.createdBetween = sinon.spy()
+      })
+
+      it('will call createdBetween on Model', function() {
+        sse(this.model, {query: 'createdBetween'})(this.req, this.res, this.next)
+
+        expect(this.model.createdBetween).to.have.been.calledOnce
+        expect(this.next).to.not.have.been.called
       })
     })
   })
